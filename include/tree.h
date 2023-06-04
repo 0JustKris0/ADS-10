@@ -3,6 +3,7 @@
 #define INCLUDE_TREE_H_
 #include <vector>
 #include <algorithm>
+
 class Tree {
  public:
   explicit Tree(std::vector<char> init) :root(nullptr) {
@@ -11,6 +12,7 @@ class Tree {
   std::vector<std::vector<char>> getPerm() const {
   return permutations;
   }
+ 
  private:
   struct Node {
   char symbol;
@@ -19,6 +21,7 @@ class Tree {
   };
   Node* root;
   std::vector<std::vector<char>> permutations;
+ 
   void addNode(Node* newroot, std::vector<char> row) {
     if (!newroot) {
       root = newroot = new Node;
@@ -32,6 +35,7 @@ class Tree {
       addNode(temp, newRow);
     }
   }
+ 
   void evadeTree(Node* newroot, std::vector<char> row) {
     if (newroot != nullptr && newroot->symbol != '\0')
       row.push_back(newroot->symbol);
@@ -41,6 +45,7 @@ class Tree {
       evadeTree(descen, row);
     }
   }
+ 
   void createPermutations(std::vector<char> row) {
     addNode(root, row);
     evadeTree(root, {});
