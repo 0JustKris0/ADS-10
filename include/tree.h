@@ -14,11 +14,14 @@ class Tree {
  private:
   Node* root;
   std::vector<std::vector<char>> perm;
+
   void createPerm(const std::vector<char>& sequence) {
     addElem(root, sequence);
     readTree(root, {});
   }
- 
+
+
+
   void readTree(Node* rootptr, std::vector<char> sequence) {
     if (rootptr != nullptr && rootptr->sym != '\0')
       sequence.push_back(rootptr->sym);
@@ -42,12 +45,12 @@ class Tree {
       addElem(num, updateSequence);
     }
   }
-  
+
  public:
   explicit Tree(const std::vector<char>& init) : root(nullptr) {
     createPerm(init);
   }
- 
+
   std::vector<std::vector<char>> getPerm() const {
     return perm;
   }
