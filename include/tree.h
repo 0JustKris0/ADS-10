@@ -4,51 +4,53 @@
 #include <vector>
 #include <algorithm>
 
+struct Node {
+  char sym;
+  std::vector<Node*> child;
+  explicit Node(char sym = '\0') : sym(sym) {}
+};
+
 class Tree {
- public:
-  explicit Tree(std::vector<char> init) :root(nullptr) {
-  createPermutations(init);
-  }
-  std::vector<std::vector<char>> getPerm() const {
-  return permutations;
-  }
- 
  private:
-  struct Node {
-  char symbol;
-  std::vector<Node*> descen;
-  explicit Node(char symbol_ = '\0') :symbol(symbol_) {}
-  };
   Node* root;
-  std::vector<std::vector<char>> permutations;
- 
-  void addNode(Node* newroot, std::vector<char> row) {
-    if (!newroot) {
-      root = newroot = new Node;
-    }
-    for (char symbol : row) {
-      Node* temp = new Node(symbol);
-      newroot->descen.push_back(temp);
-      std::vector<char> newRow(row);
-      newRow.erase(std::find(newRow.begin(), \
-      newRow.end(), symbol));
-      addNode(temp, newRow);
-    }
+  std::vector<std::vector<char>> perm;
+  void createPerm(const std::vector<char>& sequence) {
+    addElem(root, sequence);
+    readTree(root, {});
   }
  
-  void evadeTree(Node* newroot, std::vector<char> row) {
-    if (newroot != nullptr && newroot->symbol != '\0')
-      row.push_back(newroot->symbol);
-    if (newroot->descen.empty())
-      permutations.push_back(row);
-    for (Node* descen : newroot->descen) {
-      evadeTree(descen, row);
+  void readTree(Node* rootptr, std::vector<char> sequence) {
+    if (rootptr != nullptr && rootptr->sym != '\0')
+      sequence.push_back(rootptr->sym);
+    if (rootptr->child.empty())
+      perm.push_back(sequence);
+    for (Node* child : rootptr->child) {
+      readTree(child, sequence);
     }
   }
+
+  void addElem(Node* rootptr, const std::vector<char>& sequence) {
+    if (rootptr == nullptr) {
+      root = rootptr = new Node;
+    }
+    for (char sym : sequence) {
+      Node* num = new Node(sym);
+      rootptr->child.push_back(num);
+      std::vector<char> updateSequence(sequence);
+      updateSequence.erase(std::find(updateSequence.begin(), \
+                                     updateSequence.end(), sym));
+      addElem(num, updateSequence);
+    }
+  }
+  
+ public:
+  explicit Tree(const std::vector<char>& init) : root(nullptr) {
+    createPerm(init);
+  }
  
-  void createPermutations(std::vector<char> row) {
-    addNode(root, row);
-    evadeTree(root, {});
+  std::vector<std::vector<char>> getPerm() const {
+    return perm;
   }
 };
+
 #endif  // INCLUDE_TREE_H_
